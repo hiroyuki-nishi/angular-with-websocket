@@ -43,7 +43,17 @@ $ wscat -c wss://{YOUR-API-ID}.execute-api.{YOUR-REGION}.amazonaws.com/{STAGE}
 ```
 3. デプロイしたSendMessageから「テスト」を実行するとhello world文字列がハンドシェイクを確立したクライアントに
    メッセージを送信できます。
+   
+   
 ``` bash
+(例)
+1.  「テスト」に以下のJSONを用意し実行します。
+{
+  "endpoint": "<API Gatewayのwebsocketのエンドポイント>",
+  "message": "hello world"
+}
+
+2. ハンドシェイクを確立しているクライアントにメッセージが届きます。
 $ wscat -c wss://{YOUR-API-ID}.execute-api.{YOUR-REGION}.amazonaws.com/prod
 connected (press CTRL+C to quit)
 < hello world

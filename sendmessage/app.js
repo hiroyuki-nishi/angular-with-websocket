@@ -5,7 +5,6 @@ const ddb = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: 
 const { TABLE_NAME } = process.env;
 
 exports.handler = async event => {
-  console.log(event)
   let connectionData;
 
   try {
@@ -15,16 +14,16 @@ exports.handler = async event => {
   }
 
 
-  const apigwManagementApi = new AWS.ApiGatewayManagementApi({
+  const apiGatewayManagementApi = new AWS.ApiGatewayManagementApi({
     apiVersion: '2018-11-29',
-    endpoint: event.requestContext.domainName + '/' + event.requestContext.stage
+    endpoint: event.endpoint
   });
 
-  const postData = JSON.parse('{"action":"sendmessage", "data":"hello world"}').data;
+  const postData = JSON.parse(`{"action":"sendmessage", "data":"${event.message}"}`).data;
 
   const postCalls = connectionData.Items.map(async ({ connectionId }) => {
     try {
-      await apigwManagementApi.postToConnection({ ConnectionId: connectionId, Data: postData }).promise();
+      await apiGatewayManagementApi.postToConnection({ ConnectionId: connectionId, Data: postData }).promise();
     } catch (e) {
       if (e.statusCode === 410) {
         console.log(`Found stale connection, deleting ${connectionId}`);
